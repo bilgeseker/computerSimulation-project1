@@ -21,6 +21,7 @@ const int simulationYear = 200;
 const int startingPSI = 100;
 const int unfilledPosPenalty = 5;
 const int reelectingConsulPenalty = 10;
+const int totalNumOfPoliticians = 40;
 
 class Politician {
 public:
@@ -68,7 +69,7 @@ int truncated_normal_distribution(double mean, double std_dev, double min_val, d
     return age;
 }
 
-std::pair<std::vector<int>, std::vector<int> > generate_initial_ages_and_death_ages(int num_politicians) {
+std::pair<std::vector<int>, std::vector<int> > generate_initial_death_ages(int num_politicians) {
     std::vector<int> initial_ages, death_ages;
     double initial_age_mean = 55.0, initial_age_std_dev = 10.0, initial_age_min = 25.0, initial_age_max = 50.0;
     double death_age_mean = 55.0, death_age_std_dev = 10.0, death_age_min = 25.0, death_age_max = 80.0; // Adjust these values as needed
@@ -94,7 +95,7 @@ void update_politician_ages(std::vector<Politician>& politicians) {
 }
 
 std::vector<Politician> initialize_politicians(int num_politicians) {
-    std::pair<std::vector<int>, std::vector<int> > result = generate_initial_ages_and_death_ages(num_politicians);
+    std::pair<std::vector<int>, std::vector<int> > result = generate_initial_death_ages(num_politicians);
     std::vector<int>& initial_ages = result.first;
     std::vector<int>& death_ages = result.second;
 
@@ -148,7 +149,7 @@ void electionSimulation(std::vector<Politician>& politicians, int& psi) {
 
 void simulate_progression() {
     // Initialize politicians with random ages based on truncated normal distribution
-    std::vector<Politician> politicians = initialize_politicians(40);
+    std::vector<Politician> politicians = initialize_politicians(totalNumOfPoliticians);
     int psi = startingPSI;
 
     // Simulate yearly cycle
@@ -161,7 +162,7 @@ void simulate_progression() {
     std::cout << "End-of-Simulation PSI: " << psi << std::endl;
 
     // Calculate annual fill rates of political offices
-    int total_positions_filled = 40;
+    int total_positions_filled = totalNumOfPoliticians;
     double quaestor_fill_rate = static_cast<double>(count_politicians(politicians, "Quaestor")) / total_positions_filled * 100.0;
     double aedile_fill_rate = static_cast<double>(count_politicians(politicians, "Aedile")) / total_positions_filled * 100.0;
     double praetor_fill_rate = static_cast<double>(count_politicians(politicians, "Praetor")) / total_positions_filled * 100.0;
